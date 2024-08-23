@@ -19,68 +19,75 @@ To write a python program to simulate Jumbing behavior.
  ```python
  
 import pygame
+from pygame.locals import *
+from sys import exit
 
-# Initialize Pygame
+sprite_image_filename = r'C:\Users\bhuvi\OneDrive\Pictures\backgrounds\th (1).jpeg'
 pygame.init()
+screen = pygame.display.set_mode((640, 480), 0, 32)
+sprite = pygame.image.load(sprite_image_filename)
+screen.fill((0, 0, 0))
+clock = pygame.time.Clock()
 
-# Screen dimensions
-width, height = 800, 600
-screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Simple Jumping")
+# Speed in pixels per second
+speed = 250
+# The x coordinate of our sprite
+x = 0.0
 
-black = (0, 0, 0)
-white = (255, 255, 255)
+# Variables for jumping
+y = 100
+y_velocity = 0
+gravity = 1000  # pixels per second squared
+jump_speed = -500  # initial jump velocity
 
-player_width = 40
-player_height = 60
-player_x = 100
-player_y = height - player_height
-player_velocity = 5
-jump_power = -15
-gravity = 1
+# Flag to check if the sprite is on the ground
 is_jumping = False
 
-vertical_speed = 0
-
-running = True
-while running:
+while True:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+        if event.type == QUIT:
+            pygame.quit()
+            exit()
+        elif event.type == KEYDOWN:
+            if event.key == K_SPACE and not is_jumping:
+                y_velocity = jump_speed
+                is_jumping = True
+    
+    # Clear the screen
+    screen.fill((0, 0, 0))
+    
+    # Calculate the time passed
+    time_passed = clock.tick(30)
+    time_passed_seconds = time_passed / 1000.0
+    
+    # Calculate the distance moved horizontally
+    distance_moved = time_passed_seconds * speed
+    x += distance_moved
+    
+    # Calculate vertical movement
+    y_velocity += gravity * time_passed_seconds
+    y += y_velocity * time_passed_seconds
+    
+    # Check if sprite has landed on the ground
+    if y >= 100:
+        y = 100
+        y_velocity = 0
+        is_jumping = False
+    
+    # Draw the sprite at the new position
+    screen.blit(sprite, (x, y))
+    
+    # If the image goes off the end of the screen, move it back
+    if x > 640:
+        x -= 640
+    
+    # Update the display
+    pygame.display.update()
 
-    keys = pygame.key.get_pressed()
-
-    if keys[pygame.K_LEFT]:
-        player_x -= player_velocity
-    if keys[pygame.K_RIGHT]:
-        player_x += player_velocity
-
-    if not is_jumping:
-        if keys[pygame.K_SPACE]:
-            is_jumping = True
-            vertical_speed = jump_power
-
-    if is_jumping:
-        player_y += vertical_speed
-        vertical_speed += gravity
-
-        if player_y >= height - player_height:
-            player_y = height - player_height
-            is_jumping = False
-
-    screen.fill(black)
-
-    pygame.draw.rect(screen, white, (player_x, player_y, player_width, player_height))
-
-    pygame.display.flip()
-
-    pygame.time.delay(30)
-
-# Quit Pygame
-pygame.quit()
 ```
 ### Output:
-![simple](https://github.com/user-attachments/assets/1a549d09-cf66-4050-b88b-787853fef614)
+![jump](https://github.com/user-attachments/assets/5ba0dd49-9412-42cf-86da-731b1fdb006d)
+
 
 
 
