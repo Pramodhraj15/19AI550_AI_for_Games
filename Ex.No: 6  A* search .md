@@ -1,6 +1,6 @@
 # Ex.No: 6  Implementation of Zombie survival game using A* search 
 
-#### DATE: 5-10-2024
+#### DATE: 13-09-2024
 #### REGISTER NUMBER : 212221240009
 ### AIM: 
 
